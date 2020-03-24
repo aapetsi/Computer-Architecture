@@ -1,6 +1,7 @@
 """CPU functionality."""
 
 import sys
+import os
 
 
 class CPU:
@@ -15,7 +16,17 @@ class CPU:
 
     def load(self):
         """Load a program into memory."""
+        # Get arguments from command line
+        args = sys.argv
 
+        if len(sys.argv) == 1:
+            print('ERROR: PROVIDE A PROGRAM NAME')
+            sys.exit(-1)
+
+        file_name = os.getcwd() + f"/{args[1]}"
+        
+        test = [int(line.rstrip('\n')[:8], 2) for line in open(file_name)]
+    
         address = 0
 
         # For now, we've just hardcoded a program:
@@ -30,9 +41,13 @@ class CPU:
             0b00000001,  # HLT
         ]
 
-        for instruction in program:
+        for instruction in test:
             self.ram[address] = instruction
             address += 1
+
+        # for instruction in program:
+        #     self.ram[address] = instruction
+        #     address += 1
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
@@ -68,14 +83,15 @@ class CPU:
         HLT = 1
         PRN = 71
         LDI = 130
+        MUL = 162
 
         inc = 0
 
         while not self.halt:
+            
             command = self.ram_read(self.pc)
             operand_a = self.ram_read(self.pc + 1)
             operand_b = self.ram_read(self.pc + 2)
-            
 
             if command == HLT:
                 self.halt = True
@@ -90,10 +106,14 @@ class CPU:
             elif command == LDI:
                 self.registers[operand_a] = operand_b
                 inc = 3
+            
+            elif command == MUL:
+                print('multiply')
+                inc = 3
 
             else:
                 print("Invalid instruction")
-                self.halt = True
+                self.halt = False
 
             self.pc += inc
 
