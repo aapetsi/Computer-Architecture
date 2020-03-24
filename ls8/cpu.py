@@ -75,6 +75,7 @@ class CPU:
             command = self.ram_read(self.pc)
             operand_a = self.ram_read(self.pc + 1)
             operand_b = self.ram_read(self.pc + 2)
+            
 
             if command == HLT:
                 self.halt = True
@@ -89,7 +90,7 @@ class CPU:
             elif command == LDI:
                 self.registers[operand_a] = operand_b
                 inc = 3
-            
+
             else:
                 print("Invalid instruction")
                 self.halt = True
@@ -97,8 +98,8 @@ class CPU:
             self.pc += inc
 
     def ram_read(self, address):
-        return self.registers[address]
+        return self.ram[address]
 
     def ram_write(self, address, value):
         self.registers[address] = value
-        return self.registers[address]
+        return self.ram[address]
