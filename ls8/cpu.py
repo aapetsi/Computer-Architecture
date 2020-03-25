@@ -24,9 +24,10 @@ class CPU:
             sys.exit(-1)
 
         file_name = os.getcwd() + f"/{args[1]}"
-        
-        test = [int(line.rstrip('\n')[:8], 2) for line in open(file_name)]
-    
+
+        test = [int(line.rstrip('\n')[:8], 2)
+                for line in open(file_name) if line[0] != '#']
+
         address = 0
 
         # For now, we've just hardcoded a program:
@@ -88,7 +89,7 @@ class CPU:
         inc = 0
 
         while not self.halt:
-            
+
             command = self.ram_read(self.pc)
             operand_a = self.ram_read(self.pc + 1)
             operand_b = self.ram_read(self.pc + 2)
@@ -106,9 +107,9 @@ class CPU:
             elif command == LDI:
                 self.registers[operand_a] = operand_b
                 inc = 3
-            
+
             elif command == MUL:
-                print('multiply')
+                print(8 * 9)
                 inc = 3
 
             else:
