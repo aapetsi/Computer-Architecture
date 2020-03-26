@@ -37,8 +37,10 @@ class CPU:
         self.branchtable[PUSH] = self.handle_push
         self.branchtable[POP] = self.handle_pop
         # STACK POINTER
-        self.sp = 7  # IT POINTS TO REGISTER NUMBER 7, WHICH ACCORDING TO SPECS HOLDS THE STACK POINTER
-        # WE SET THE INITIAL STACK POINTER TO 0XF3, THE MEMORY SLOT WHICH, ACCORDING TO SPEC, IS THE START OF THE SPEC
+        self.sp = 7  # IT POINTS TO REGISTER NUMBER 7, WHICH ACCORDING TO
+        # SPECS HOLDS THE STACK POINTER
+        # WE SET THE INITIAL STACK POINTER TO 0XF3, THE MEMORY SLOT WHICH,
+        # ACCORDING TO SPEC, IS THE START OF THE SPEC
         self.reg[self.sp] = 0xF4
         # CALL / RET
         self.branchtable[CALL] = self.handle_call
@@ -97,7 +99,8 @@ class CPU:
             for line in f:
                 # WE DIVIDE LINE IF THERE IS A COMMENT
                 comment_split = line.split('#')
-                # WE TAKE THE LEFT PART OF THE ARRAY, AND STRIP SPACE AT THE END
+                # WE TAKE THE LEFT PART OF THE ARRAY, AND STRIP SPACE AT THE
+                # END
                 instruction = comment_split[0].strip()
                 # print(f'Instruction: {instruction} in line {debug}')
                 if instruction == '':
@@ -106,7 +109,8 @@ class CPU:
                 binary_code = int(instruction, 2)
                 # WE SAVE EACH INSTRUCTION INTO RAM
                 self.ram_write(starting_memory, binary_code)
-                # WE INCREMENT THE ADDRESS IN MEMORE SO WE CAN ADD THE NEXT INSTRUCTION IN THE NEXT SLOT
+                # WE INCREMENT THE ADDRESS IN MEMORE SO WE CAN ADD THE NEXT
+                # INSTRUCTION IN THE NEXT SLOT
                 starting_memory += 1
                 # debug += 1
 
@@ -182,7 +186,8 @@ class CPU:
         else:
             # WE GRAB THE VALUE AT THE REGISTER WE WANT TO PUSH
             value = self.reg[operand_a]
-        # WE DECREASE THE STACK POINTER BY ONE, SINCE WE ARE ADDING AN ITEM INTO THE STACK AND THE HEAD IS NOW ONE SLOT DOWN
+        # WE DECREASE THE STACK POINTER BY ONE, SINCE WE ARE ADDING AN ITEM
+        # INTO THE STACK AND THE HEAD IS NOW ONE SLOT DOWN
         self.reg[self.sp] -= 1
         # WE SET THE HEAD OF THE STACK TO THE VALUE EXTRACTED FROM THE REGISTER
         # self.ram[self.reg[self.sp]] = value
@@ -202,9 +207,11 @@ class CPU:
         # WE EXTRACT THE VALUE AT THE HEAD OF THE STACK
         value = self.ram[self.reg[self.sp]]
         if operand_a:
-            # WE SET THE VALUE OF THE REGISTER TO THE VALUE EXTRACTED FROM THE HEAD OF THE STACK
+            # WE SET THE VALUE OF THE REGISTER TO THE VALUE EXTRACTED FROM THE
+            # HEAD OF THE STACK
             self.reg[operand_a] = value
-            # WE DECREASE THE HEAD OF THE STACK SINCE WE REMOVED AN ELEMENT FROM IT
+            # WE DECREASE THE HEAD OF THE STACK SINCE WE REMOVED AN ELEMENT
+            # FROM IT
             self.reg[self.sp] += 1
             # WE SET THE SIZE FOR PC FOR NEXT INSTRUCTION TO TAKE PLACE
             self.inc_size = 2
@@ -215,11 +222,14 @@ class CPU:
             return value
 
     def handle_call(self, IR, operand_a, operand_b):
-        # address in memory where instruction after call self.pc will be set so CPU execution continues
+        # address in memory where instruction after call self.pc will be set so
+        # CPU execution continues
         next_instruction = self.pc + 2
-        # CALL ONLY USES ONE OPERAND. THEREFORE, OPERAND B IS THE NEXT INSTRUCTION AFTER CALL IS RETURNED
+        # CALL ONLY USES ONE OPERAND. THEREFORE, OPERAND B IS THE NEXT
+        # INSTRUCTION AFTER CALL IS RETURNED
         self.handle_push(IR, next_instruction)
-        # set program counter to the value in the register being passed with call
+        # set program counter to the value in the register being passed with
+        # call
         self.pc = self.reg[operand_a]
 
     def handle_ret(self, IR, operand_a, operand_b):
