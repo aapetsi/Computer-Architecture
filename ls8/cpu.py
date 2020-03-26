@@ -3,6 +3,7 @@
 import sys
 import os
 
+SP = 7
 
 class CPU:
     """Main CPU class."""
@@ -87,6 +88,10 @@ class CPU:
         PRN = 71
         LDI = 130
         MUL = 162
+        PUSH = 69
+        POP = 70
+        CALL = None
+        RET = None
 
         inc = 0
 
@@ -113,6 +118,18 @@ class CPU:
             elif command == MUL:
                 self.alu('MUL', operand_a, operand_b)
                 inc = 3
+            
+            elif command == PUSH:
+                val = self.registers[operand_a]
+                self.registers[SP] -= 1
+                self.ram_write(self.registers[SP],val)
+                inc = 2
+            
+            elif command == POP:
+                val = self.ram_read(self.registers[SP])
+                self.registers[SP] += 1
+                self.registers[operand_a] = val
+                inc = 2
 
             else:
                 print("Invalid instruction")
